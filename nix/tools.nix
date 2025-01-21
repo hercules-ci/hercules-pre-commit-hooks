@@ -91,11 +91,6 @@
 }:
 
 
-let
-  tex = texlive.combine {
-    inherit (texlive) latexindent chktex scheme-basic;
-  };
-in
 {
   clang-tools = llvmPackages_latest.clang-tools;
   inherit
@@ -191,11 +186,6 @@ in
   tflint = callPackage ./tflint { };
   dune-build-opam-files = callPackage ./dune-build-opam-files { dune = dune_3; inherit (pkgsBuildBuild) ocaml; };
   dune-fmt = callPackage ./dune-fmt { dune = dune_3; inherit (pkgsBuildBuild) ocaml; };
-  latexindent = tex;
-  lacheck = texlive.combine {
-    inherit (texlive) lacheck scheme-basic;
-  };
-  chktex = tex;
   commitizen = commitizen.overrideAttrs (_: _: { doCheck = false; });
   bats = if bats ? withLibraries then (bats.withLibraries (p: [ p.bats-support p.bats-assert p.bats-file ])) else bats;
   git-annex = if stdenv.isDarwin then null else git-annex;
