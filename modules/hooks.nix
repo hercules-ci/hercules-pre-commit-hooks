@@ -1875,6 +1875,12 @@ in
                 default = "";
                 example = ".yamlfmt";
               };
+            lint-only =
+              mkOption {
+                type = types.bool;
+                description = "Only lint the files, do not format them in place.";
+                default = true;
+              };
           };
         };
       };
@@ -3878,10 +3884,10 @@ lib.escapeShellArgs (lib.concatMap (ext: [ "--ghc-opt" "-X${ext}" ]) hooks.ormol
               cmdArgs =
                 mkCmdArgs
                   (with hooks.yamlfmt.settings; [
-                    # Exit non-zero on changes
-                    [ true "-lint" ]
-                    # But do not print the diff
-                    [ true "-quiet" ]
+                    # Exit with non-zero status if the file is not formatted
+                    [ lint-only "-lint" ]
+                    # Do not print the diff
+                    [ lint-only "-quiet" ]
                     # See https://github.com/google/yamlfmt/blob/main/docs/config-file.md#config-file-discovery
                     [ (configPath != "") "-conf ${configPath}" ]
                   ]);
